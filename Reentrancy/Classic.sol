@@ -1,8 +1,9 @@
 // SPDX-License-Identifier: MIT
 pragma solidity ^0.8.19;
 
+// Classic Reentrancy
 contract Vulnurable {
-    mapping (address user => uint funds) balances;
+    mapping(address user => uint256 funds) balances;
 
     function deposite() public payable {
         require(msg.value < 2 ether);
@@ -10,14 +11,13 @@ contract Vulnurable {
     }
 
     function withdraw() public {
-        uint amt = balances[msg.sender];
+        uint256 amt = balances[msg.sender];
         balances[msg.sender] = 0; // if done here, re-entry not possible
-        
-        (bool sent, ) = payable (msg.sender).call{value: amt}("");
+
+        (bool sent,) = payable(msg.sender).call{value: amt}("");
         require(sent, "Not enough funds");
 
         // balances[msg.sender] = 0; if done here, re-entry possible
-
     }
 }
 
@@ -28,6 +28,7 @@ contract Attacker {
         addr = _addr;
         Vulnurable(addr).deposite{value: msg.value}();
     }
+
     function get() public {
         Vulnurable(addr).withdraw();
     }
