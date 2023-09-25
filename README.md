@@ -25,8 +25,24 @@
     - UniswapV3PoolDeployer
     - IUniswapV3PoolState
   
-### Uniswap Contract Flow:  
-Everywhere Interfaces are used instead of Contracts (which is Understandable!!)
-1. V3Factory Deploys Pool using UniswapV3PoolDeployer 
-2. UniswapV3PoolDeployer deploys new Pool by creating new Instance of the UniswapV3Pool and initiates parameters to later called inside the constructor of the Pool Smart Contract
-3. Pool is Created
+  ### Uniswap Contract Flow:  
+  Everywhere Interfaces are used instead of Contracts 
+  (which is Understandable!!)
+  1. V3Factory Deploys Pool using UniswapV3PoolDeployer 
+  2. UniswapV3PoolDeployer deploys new Pool by creating new Instance of the UniswapV3Pool and initiates parameters to later called inside the constructor of the Pool Smart Contract
+  3. Pool is Created
+
+
+## Day 3
+- Live auditing process video
+  - how to optimize gas in for-loops (cache the comparision in one variable, instead of checking each time)
+  - Avoid Reentrancy using CEI pattern (most common) 
+  - Wrap all the functions and get the high level overview of what they are doing instead of getting overwhelmed by the codebase
+  - break down smart contract in terms of features (not functions)
+### Uniswap Contract cont.
+  - Ticks are used for Range bound liquidity
+    - Ticks are sort of the upper and lower limits in between which the liquidity provider wants the trades to occur
+    - It helps to minimize the impermanent loss that was the issue in uniswap-v2
+
+- Trying to create a basic DEX by taking reference from Uniswap Smart Contract
+  - ticks and other complex features of Uniswap are not included yet
