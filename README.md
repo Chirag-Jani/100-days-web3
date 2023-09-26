@@ -46,3 +46,13 @@
 
 - Trying to create a basic DEX by taking reference from Uniswap Smart Contract
   - ticks and other complex features of Uniswap are not included yet
+
+
+## Day 4
+- Learnt more about EVM and how it stores data
+  - Stack
+  - Memory
+  - Calldata
+  - Storage
+  - Logs
+  - Code
