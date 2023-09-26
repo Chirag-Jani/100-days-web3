@@ -56,3 +56,15 @@
   - Storage
   - Logs
   - Code
+  - Opecodes
+  - Calling function with lower signature value is gas efficient because at opcode level, it gets stored in the ascending order of the value of the function signature
+  - EVM Process [here]([https://](https://www.evm.codes/))
+
+### Uniswap Ticks and Range Bound Liquidity
+- Tick represents the price range where the token can be traded with another token
+- In V2, LPers needed to provide Liqui. in the whole range (x * y = k)
+  - Impermanent loss was there due to this
+- There are two things to consider, one is Ticks and other is sqrtPriceX96
+  - Ticks are the lower and upper limits
+  - whereas, sqrtPriceX96 is the actual price at which trading/swapping is taking place 
+    - this is generally between two ticks
