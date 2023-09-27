@@ -68,3 +68,8 @@
   - Ticks are the lower and upper limits
   - whereas, sqrtPriceX96 is the actual price at which trading/swapping is taking place 
     - this is generally between two ticks
+
+## Day 5
+- DEX smart contract dev. cont.
+- Created Factory contract without Ticks (reference of uniswap contracts)
+- Learning Uniswap Pool Contract in depth using [Smart Contract Programmer](https://youtube.com/playlist?list=PLO5VPQH6OWdXp2_Nk8U7V-zh7suI05i0E&si=QWPwzWgV22DaBuQ6) Uniswap V3 playlist
