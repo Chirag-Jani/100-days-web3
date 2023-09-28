@@ -73,3 +73,8 @@
 - DEX smart contract dev. cont.
 - Created Factory contract without Ticks (reference of uniswap contracts)
 - Learning Uniswap Pool Contract in depth using [Smart Contract Programmer](https://youtube.com/playlist?list=PLO5VPQH6OWdXp2_Nk8U7V-zh7suI05i0E&si=QWPwzWgV22DaBuQ6) Uniswap V3 playlist
+
+## Day 6
+- How minting works in Uniswap
+- Implementing the mint function 
+- 
