@@ -5,6 +5,7 @@ import {Tick} from "./lib/Tick.sol";
 import {TickMath} from "./lib/TickMath.sol";
 import {Position} from "./lib/Position.sol";
 import {SafeCast} from "./lib/SafeCast.sol";
+import {IERC20} from "./interfaces/IERC20.sol";
 
 contract CLAMM {
     using SafeCast for int256;
@@ -76,5 +77,15 @@ contract CLAMM {
                 liquidityDelta: int256(uint256(amount)).toInt128()
             })
         );
+
+        amount0 = uint256(amount0Int);
+        amount1 = uint256(amount1Int);
+
+        if (amount0 > 0) {
+            IERC20(token0).transferFrom(msg.sender, address(this), amount0);
+        }
+        if (amount1 > 0) {
+            IERC20(token1).transferFrom(msg.sender, address(this), amount1);
+        }
     }
 }

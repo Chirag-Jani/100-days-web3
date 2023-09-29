@@ -77,4 +77,11 @@
 ## Day 6
 - How minting works in Uniswap
 - Implementing the mint function 
-- 
+
+## Day 7
+- [Sandwich Attacks](https://youtu.be/6y3nwJS4UJw?si=Sy09pcAKtWOVCXnr)
+  - These are special type of Frontrunning attacks
+  - Happens while swapping
+  - Price SLippage can affect our swaps 
+  - attacker can take advantage of slippage by frontrunning our swap transaction
+  - can keep the check on slippage amount while swapping called SLIPPAGE TOLERANCE
