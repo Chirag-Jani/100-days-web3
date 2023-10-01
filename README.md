@@ -85,3 +85,10 @@
   - Price SLippage can affect our swaps 
   - attacker can take advantage of slippage by frontrunning our swap transaction
   - can keep the check on slippage amount while swapping called SLIPPAGE TOLERANCE
+
+## Day 8
+- Trip
+
+## Day 9
+- Understanding GMX V2 protocol
+- Uniswap cont.
