@@ -1,6 +1,8 @@
 // SPDX-License-Identifier: UNLICENSED
 pragma solidity >=0.5.0 <0.9.0;
 
+import {LiquidityMath} from "./LiquidityMath.sol";
+
 library Position {
     // info stored for each user's position
     struct Info {
@@ -12,5 +14,34 @@ library Position {
         // the fees owed to the position owner in token0/token1
         uint128 tokensOwed0;
         uint128 tokensOwed1;
+    }
+
+    function get(mapping(bytes32 => Info) storage self, address owner, int24 tickLower, int24 tickUpper)
+        internal
+        view
+        returns (Position.Info storage position)
+    {
+        position = self[keccak256(abi.encodePacked(owner, tickLower, tickUpper))];
+    }
+
+    function update(Info storage self, int128 liquidityDelta, int256 feeGrowthInside0X128, int256 feeGrowthInside1X128)
+        internal
+    {
+        Info memory _self = self;
+
+        uint128 liquidityNext;
+
+        if (liquidityDelta == 0) {
+            require(_self.liquidity > 0, "0 Liquidity");
+            liquidityNext = _self.liquidity;
+        } else {
+            liquidityNext = LiquidityMath.addDelta(_self.liquidity, liquidityDelta);
+        }
+
+        if (liquidityDelta != 0) {
+            self.liquidity = liquidityDelta < 0
+                ? _self.liquidity = uint128(-liquidityDelta)
+                : _self.liquidity + uint128(liquidityDelta);
+        }
     }
 }

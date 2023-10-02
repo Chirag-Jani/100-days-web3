@@ -7,8 +7,17 @@ import {Position} from "./lib/Position.sol";
 import {SafeCast} from "./lib/SafeCast.sol";
 import {IERC20} from "./interfaces/IERC20.sol";
 
+function checkTicks(int24 tickLower, int24 tickUpper) pure {
+    require(tickLower < tickUpper);
+    require(tickLower >= TickMath.MIN_TICK);
+    require(tickUpper <= TickMath.MAX_TICK);
+}
+
 contract CLAMM {
     using SafeCast for int256;
+    using Position for mapping(bytes32 => Position.Info);
+    using Position for Position.Info;
+    using Tick for mapping(int24 => Tick.Info);
 
     address public immutable token0;
     address public immutable token1;
@@ -23,6 +32,7 @@ contract CLAMM {
     }
 
     Slot0 public slot0;
+    mapping(int24 => Tick.Info) public ticks;
     mapping(bytes32 => Position.Info) public positions;
 
     modifier lock() {
@@ -49,6 +59,47 @@ contract CLAMM {
         slot0 = Slot0({sqrtPriceX96: sqrtPriceX96, tick: tick, unlocked: true});
     }
 
+    function _updatePosition(address owner, int24 tickLower, int24 tickUpper, int128 liquidityDelta, int24 tick)
+        internal
+        returns (Position.Info storage position)
+    {
+        position = positions.get(owner, tickLower, tickUpper);
+
+        // TODO fees
+        uint256 _feeGrowthGlobal0X128 = 0; // SLOAD for gas optimization
+        uint256 _feeGrowthGlobal1X128 = 0; // SLOAD for gas optimization
+
+        bool flippedLower;
+        bool flippedUpper;
+
+        if (liquidityDelta != 0) {
+            flippedLower = ticks.update(
+                tickLower,
+                tick,
+                liquidityDelta,
+                _feeGrowthGlobal0X128,
+                _feeGrowthGlobal1X128,
+                false,
+                maxLiquidityPerTick
+            );
+
+            flippedUpper = ticks.update(
+                tickLower, tick, liquidityDelta, _feeGrowthGlobal0X128, _feeGrowthGlobal1X128, true, maxLiquidityPerTick
+            );
+        }
+
+        position.update(liquidityDelta, 0, 0);
+
+        if (liquidityDelta < 0) {
+            if (flippedLower) {
+                ticks.clear(tickLower);
+            }
+            if (flippedUpper) {
+                ticks.clear(tickUpper);
+            }
+        }
+    }
+
     struct ModifyPositionParams {
         address owner;
         int24 tickLower;
@@ -60,6 +111,12 @@ contract CLAMM {
         private
         returns (Position.Info storage position, int256 amount0Int, int256 amount1Int)
     {
+        checkTicks(params.tickLower, params.tickUpper);
+
+        Slot0 memory _slot0 = slot0; // loading in memory for gas optimization
+
+        position = _updatePosition(params.owner, params.tickLower, params.tickUpper, params.liquidityDelta, _slot0.tick);
+
         return (positions[bytes32(0)], 0, 0);
     }
 
