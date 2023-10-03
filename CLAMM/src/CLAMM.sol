@@ -5,6 +5,7 @@ import {Tick} from "./lib/Tick.sol";
 import {TickMath} from "./lib/TickMath.sol";
 import {Position} from "./lib/Position.sol";
 import {SafeCast} from "./lib/SafeCast.sol";
+import {SqrtPriceMath} from "./lib/SqrtPriceMath.sol";
 import {IERC20} from "./interfaces/IERC20.sol";
 
 function checkTicks(int24 tickLower, int24 tickUpper) pure {
@@ -32,6 +33,7 @@ contract CLAMM {
     }
 
     Slot0 public slot0;
+    uint128 public liquidity;
     mapping(int24 => Tick.Info) public ticks;
     mapping(bytes32 => Position.Info) public positions;
 
@@ -109,7 +111,7 @@ contract CLAMM {
 
     function _modifyPosition(ModifyPositionParams memory params)
         private
-        returns (Position.Info storage position, int256 amount0Int, int256 amount1Int)
+        returns (Position.Info storage position, int256 amount0, int256 amount1)
     {
         checkTicks(params.tickLower, params.tickUpper);
 
@@ -117,7 +119,37 @@ contract CLAMM {
 
         position = _updatePosition(params.owner, params.tickLower, params.tickUpper, params.liquidityDelta, _slot0.tick);
 
-        return (positions[bytes32(0)], 0, 0);
+        if (params.liquidityDelta != 0) {
+            if (_slot0.tick < params.tickLower) {
+                // current tick is below the passed range; liquidity can only become in range by crossing from left to
+                // right, when we'll need _more_ token0 (it's becoming more valuable) so user must provide it
+                amount0 = SqrtPriceMath.getAmount0Delta(
+                    TickMath.getSqrtRatioAtTick(params.tickLower),
+                    TickMath.getSqrtRatioAtTick(params.tickUpper),
+                    params.liquidityDelta
+                );
+            } else if (_slot0.tick < params.tickUpper) {
+                // current tick is inside the passed range
+                amount0 = SqrtPriceMath.getAmount0Delta(
+                    _slot0.sqrtPriceX96, TickMath.getSqrtRatioAtTick(params.tickUpper), params.liquidityDelta
+                );
+                amount1 = SqrtPriceMath.getAmount1Delta(
+                    TickMath.getSqrtRatioAtTick(params.tickLower), _slot0.sqrtPriceX96, params.liquidityDelta
+                );
+
+                liquidity = params.liquidityDelta > 0
+                    ? liquidity - uint128(-params.liquidityDelta)
+                    : liquidity + uint128(params.liquidityDelta);
+            } else {
+                // current tick is above the passed range; liquidity can only become in range by crossing from right to
+                // left, when we'll need _more_ token1 (it's becoming more valuable) so user must provide it
+                amount1 = SqrtPriceMath.getAmount1Delta(
+                    TickMath.getSqrtRatioAtTick(params.tickLower),
+                    TickMath.getSqrtRatioAtTick(params.tickUpper),
+                    params.liquidityDelta
+                );
+            }
+        }
     }
 
     function mint(address recipient, int24 tickLower, int24 tickUpper, uint128 amount)

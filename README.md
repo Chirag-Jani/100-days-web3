@@ -92,3 +92,14 @@
 ## Day 9
 - Understanding GMX V2 protocol
 - Uniswap cont.
+
+## Day 10 
+- Uniswap Update position 
+
+## Day 11
+- Relation between Upper Tick, lower tick, and current tick
+- How does it affect the liquidity
+- Liquidity Net when price increases and decreases between two ticks
+- Real and Virtual researves of Token0 and Token1 on the curve
+- Liquidity Delta
+- Completed the _modifyPosition function and hence mint function
