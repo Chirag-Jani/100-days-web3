@@ -103,3 +103,6 @@
 - Real and Virtual researves of Token0 and Token1 on the curve
 - Liquidity Delta
 - Completed the _modifyPosition function and hence mint function
+
+## Day 12
+- CTF solution code go through
