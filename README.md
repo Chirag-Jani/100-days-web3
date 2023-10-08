@@ -114,3 +114,8 @@
 - Constant Sum AMM
 
 ## Day 15
+- Faucet contract implementation
+
+## Day 16 
+(Starting projects now)
+- Understanding AAVE protocol 
