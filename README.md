@@ -119,3 +119,15 @@
 ## Day 16 
 (Starting projects now)
 - Understanding AAVE protocol 
+
+## Day 17
+- 21 Vulnurabilities in smart contracts 
+
+## Day 18
+- Uniswap Blog
+
+## Day 19
+- Ethernaut challanges
+  - Token
+  - Reentrancy
+  - Elevator
