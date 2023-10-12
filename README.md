@@ -128,6 +128,14 @@
 
 ## Day 19
 - Ethernaut challanges
-  - Token
-  - Reentrancy
-  - Elevator
+  - Token (?)
+  - Reentrancy (?)
+
+## Day 20
+  - Elevator (!!)
+  - King 
+  - Shop (!!)
+  - Privacy (!)
+
+## Day 21
+- TBA
