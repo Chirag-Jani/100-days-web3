@@ -138,4 +138,5 @@
   - Privacy (!)
 
 ## Day 21
-- TBA
+- Gatekeeper One ( ?! )
+- MagicNumber (!)
