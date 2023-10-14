@@ -140,3 +140,7 @@
 ## Day 21
 - Gatekeeper One ( ?! )
 - MagicNumber (!)
+
+## Day 22
+- NaughtCoin ( ? )
+- Preservation (!!)
